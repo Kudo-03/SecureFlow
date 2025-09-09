@@ -16,8 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.example.secureflow.vpn.SimpleVpnService
-
+import com.example.secureflow.MyVpnService
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
@@ -30,7 +29,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
     ) { res ->
         busy = false
         if (res.resultCode == Activity.RESULT_OK) {
-            val svc = Intent(context, SimpleVpnService::class.java)
+            val svc = Intent(context, MyVpnService::class.java)
             ContextCompat.startForegroundService(context, svc)
             status = "SecureFlow: running"
         } else {
@@ -54,7 +53,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 if (prep != null) {
                     vpnLauncher.launch(prep)
                 } else {
-                    val svc = Intent(context, SimpleVpnService::class.java)
+                    val svc = Intent(context, MyVpnService::class.java)
                     ContextCompat.startForegroundService(context, svc)
                     status = "SecureFlow: running"
                     busy = false
@@ -64,10 +63,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
-                context.stopService(Intent(context, SimpleVpnService::class.java))
+                context.stopService(Intent(context, MyVpnService::class.java))
                 status = "SecureFlow: stopped"
             }
         ) { Text("Stop VPN") }
     }
 }
-
