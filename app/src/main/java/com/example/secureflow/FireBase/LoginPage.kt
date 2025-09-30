@@ -3,13 +3,8 @@ package com.example.secureflow.FireBase
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,10 +32,15 @@ fun LoginPage(
                     popUpTo("login") { inclusive = true }
                 }
             }
+
             is AuthState.Error -> {
-                val message = (authState as AuthState.Error).message
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    context,
+                    (authState as AuthState.Error).message,
+                    Toast.LENGTH_LONG
+                ).show()
             }
+
             else -> Unit
         }
     }
@@ -77,7 +77,7 @@ fun LoginPage(
 
         Button(
             onClick = { authViewModel.login(email, password) },
-            enabled = authState != AuthState.Loading,
+            enabled = authState !is AuthState.Loading,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Login")
@@ -86,9 +86,11 @@ fun LoginPage(
         Spacer(modifier = Modifier.height(16.dp))
 
         TextButton(
-            onClick = { navController.navigate("signup") },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = authState != AuthState.Loading
+            onClick = {
+                authViewModel.signout() // ensure state resets
+                navController.navigate("signup")
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text("Don't have an account? Sign up")
         }

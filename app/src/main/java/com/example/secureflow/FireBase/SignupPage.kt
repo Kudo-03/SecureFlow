@@ -1,6 +1,5 @@
 package com.example.secureflow.FireBase
 
-
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -31,14 +30,21 @@ fun SignupPage(
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Authenticated -> {
-                navController.navigate("home") {
+                Toast.makeText(context, "Account created! Please log in.", Toast.LENGTH_SHORT).show()
+                authViewModel.signout() // ensures Firebase resets to Unauthenticated
+                navController.navigate("login") {
                     popUpTo("signup") { inclusive = true }
                 }
             }
+
             is AuthState.Error -> {
-                val message = (authState as AuthState.Error).message
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    context,
+                    (authState as AuthState.Error).message,
+                    Toast.LENGTH_LONG
+                ).show()
             }
+
             else -> Unit
         }
     }
@@ -50,7 +56,7 @@ fun SignupPage(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Signup", fontSize = 28.sp)
+        Text("Create an Account", fontSize = 28.sp)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -92,10 +98,8 @@ fun SignupPage(
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = {
-                authViewModel.signup(email, password, firstName, lastName)
-            },
-            enabled = authState != AuthState.Loading,
+            onClick = { authViewModel.signup(email, password, firstName, lastName) },
+            enabled = authState !is AuthState.Loading,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Create Account")
@@ -104,7 +108,10 @@ fun SignupPage(
         Spacer(modifier = Modifier.height(16.dp))
 
         TextButton(
-            onClick = { navController.navigate("login") },
+            onClick = {
+                authViewModel.signout()
+                navController.navigate("login")
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Already have an account? Log in")
