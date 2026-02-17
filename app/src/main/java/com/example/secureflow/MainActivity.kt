@@ -1,5 +1,6 @@
 package com.example.secureflow
 
+<<<<<<< HEAD
 
 import android.content.Intent
 import android.net.VpnService
@@ -32,10 +33,30 @@ class MainActivity : ComponentActivity() {
             SecureFlowTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainScreen(modifier = Modifier.padding(innerPadding))
+=======
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.secureflow.FireBase.AuthViewModel
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MaterialTheme {
+                Surface {
+                    SecureFlowApp()
+>>>>>>> try5
                 }
             }
         }
     }
+<<<<<<< HEAD
 
     // ✅ This must be outside of onCreate
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -53,4 +74,13 @@ class MainActivity : ComponentActivity() {
     companion object {
         const val VPN_REQUEST_CODE = 100
     }
+=======
+}
+
+@Composable
+fun SecureFlowApp() {
+    val navController = rememberNavController()
+    val authViewModel: AuthViewModel = viewModel()
+    SecureFlowNavGraph(navController = navController, authViewModel = authViewModel)
+>>>>>>> try5
 }
